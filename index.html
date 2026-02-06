@@ -276,7 +276,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.coloring-actions { display: flex; gap: 4px; }
+.coloring-actions { display: flex; gap: 3px; flex-shrink: 0; }
 .coloring-actions button {
   background: none;
   border: none;
@@ -919,6 +919,32 @@ body {
 .gallery-card:nth-child(6) { animation-delay: 0.3s; }
 
 /* ===== RESPONSIVE ===== */
+/* Small phones */
+@media (max-width: 374px) {
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; padding: 4px 10px; }
+  .tool-btn { width: 36px; height: 36px; font-size: 1rem; }
+  .color-swatch { width: 28px; height: 28px; }
+  .coloring-actions button { padding: 3px 5px; font-size: 1rem; }
+  .brush-slider { min-width: 40px; }
+  .filter-chip { padding: 3px 7px; font-size: 0.65rem; }
+  .secondary-filters { gap: 6px; padding: 0 10px 6px; }
+  .zoom-btn { width: 28px; height: 28px; font-size: 0.85rem; }
+  .zoom-level { font-size: 0.6rem; padding: 0 5px; }
+}
+
+/* Regular phones */
+@media (max-width: 480px) {
+  .coloring-header { padding: 6px 8px; gap: 6px; }
+  .coloring-actions { gap: 2px; }
+  .coloring-actions button { padding: 3px 5px; font-size: 1.1rem; }
+  .coloring-title { font-size: 0.95rem; }
+  .toolbar { padding: 6px 8px; }
+  .tool-row { gap: 4px; margin-bottom: 4px; }
+  .secondary-filters { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .secondary-filters::-webkit-scrollbar { display: none; }
+  .filter-group { flex-shrink: 0; }
+}
+
 @media (min-width: 768px) {
   .gallery-grid { padding: 4px 24px; }
   .toolbar { padding: 10px 20px; }
