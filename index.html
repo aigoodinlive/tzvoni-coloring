@@ -133,6 +133,48 @@ body {
   box-shadow: 0 4px 15px rgba(255,107,157,0.3);
 }
 
+/* Secondary Filters */
+.secondary-filters {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 8px;
+  flex-wrap: wrap;
+}
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.filter-chips {
+  display: flex;
+  gap: 4px;
+}
+.filter-chip {
+  padding: 4px 10px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 50px;
+  background: white;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.filter-chip:hover { border-color: var(--color-accent); }
+.filter-chip.active {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
 /* Grid */
 .gallery-grid {
   display: grid;
@@ -263,6 +305,46 @@ body {
   display: block;
   touch-action: none;
   cursor: crosshair;
+}
+
+.canvas-wrapper {
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.zoom-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  gap: 4px;
+  z-index: 5;
+}
+.zoom-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.zoom-btn:hover { background: white; transform: scale(1.1); }
+.zoom-level {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background: rgba(255,255,255,0.9);
+  padding: 0 8px;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 /* Toolbar */
@@ -496,6 +578,150 @@ body {
 .empty-state .emoji { font-size: 3rem; margin-bottom: 12px; }
 .empty-state p { font-size: 1rem; }
 
+/* ===== ADMIN PANEL ===== */
+.admin-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.admin-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--color-text);
+}
+.admin-form { max-width: 500px; margin: 0 auto; }
+.admin-field {
+  margin-bottom: 14px;
+}
+.admin-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+.admin-field input,
+.admin-field select,
+.admin-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+.admin-field input:focus,
+.admin-field select:focus,
+.admin-field textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.admin-field textarea { min-height: 120px; font-family: monospace; font-size: 0.8rem; }
+.admin-preview {
+  background: #FAFAFA;
+  border: 2px dashed #E5E7EB;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 14px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-preview svg { max-width: 200px; max-height: 200px; }
+.admin-save-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 10px;
+}
+.admin-save-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.admin-count {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+.admin-list { margin-top: 20px; }
+.admin-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background: white;
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  box-shadow: var(--shadow-sm);
+}
+.admin-list-item svg { width: 40px; height: 40px; }
+.admin-list-item .name { flex: 1; font-size: 0.85rem; font-weight: 600; }
+.admin-delete-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.admin-delete-btn:hover { background: #FEE2E2; }
+
+/* ===== CONFIRM DIALOG ===== */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.confirm-overlay.show { opacity: 1; pointer-events: auto; }
+.confirm-box {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  text-align: center;
+  max-width: 300px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  transform: scale(0.9);
+  transition: transform 0.25s ease;
+}
+.confirm-overlay.show .confirm-box { transform: scale(1); }
+.confirm-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+.confirm-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--color-text); }
+.confirm-text { font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 20px; line-height: 1.5; }
+.confirm-buttons { display: flex; gap: 10px; }
+.confirm-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.confirm-btn:hover { transform: translateY(-1px); }
+.confirm-btn.cancel { background: #F3F4F6; color: var(--color-text); }
+.confirm-btn.danger { background: linear-gradient(135deg, #FF6B9D, #FF4757); color: white; }
+
 /* ===== ANIMATIONS ===== */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -521,7 +747,7 @@ body {
 <!-- ===== HOME SCREEN ===== -->
 <div id="homeScreen" class="screen active">
   <div class="header">
-    <div class="logo">צבעוני 🎨</div>
+    <div class="logo" onclick="handleLogoClick()">צבעוני 🎨</div>
     <div class="header-actions">
       <button class="header-btn" onclick="showScreen('support')" title="תמיכה">💚</button>
     </div>
@@ -529,6 +755,16 @@ body {
   <div class="gallery-container">
     <div class="subtitle">צביעה בחינם לילדים</div>
     <div class="category-filter" id="categoryFilter"></div>
+    <div class="secondary-filters">
+      <div class="filter-group">
+        <span class="filter-label">קושי:</span>
+        <div class="filter-chips" id="difficultyFilter"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">גיל:</span>
+        <div class="filter-chips" id="ageFilter"></div>
+      </div>
+    </div>
     <div class="gallery-grid" id="galleryGrid"></div>
   </div>
 </div>
@@ -541,20 +777,38 @@ body {
     <div class="coloring-actions">
       <button onclick="undo()" id="undoBtn" title="בטל" disabled>↩️</button>
       <button onclick="redo()" id="redoBtn" title="חזור" disabled>↪️</button>
-      <button onclick="clearCanvas()" title="נקה">🗑️</button>
+      <button onclick="confirmClear()" title="נקה">🗑️</button>
       <button onclick="saveImage()" title="שמור">💾</button>
+      <button onclick="shareImage()" title="שלחי לסבתא">💌</button>
     </div>
   </div>
   <div class="canvas-container" id="canvasContainer">
-    <canvas id="coloringCanvas"></canvas>
+    <div class="canvas-wrapper" id="canvasWrapper">
+      <canvas id="coloringCanvas"></canvas>
+    </div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoomIn()" title="זום +">+</button>
+      <button class="zoom-btn" onclick="zoomOut()" title="זום -">−</button>
+      <span class="zoom-level" id="zoomLevel">100%</span>
+      <button class="zoom-btn" onclick="resetZoom()" title="אפס זום">↺</button>
+    </div>
   </div>
   <div class="toolbar">
     <div class="tool-row">
       <button class="tool-btn active" id="brushBtn" onclick="setTool('brush')" title="מברשת">🖌️</button>
       <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')" title="מחק">🧹</button>
       <button class="tool-btn" id="fillBtn" onclick="setTool('fill')" title="מילוי">🪣</button>
+      <button class="tool-btn" id="stampBtn" onclick="setTool('stamp')" title="חותמת">⭐</button>
       <input type="range" class="brush-slider" id="brushSlider" min="2" max="50" value="12" oninput="setBrushSize(this.value)">
       <span class="brush-size-label" id="brushSizeLabel">12</span>
+    </div>
+    <div class="tool-row stamp-shapes" id="stampShapes" style="display:none">
+      <button class="tool-btn active" data-stamp="star" onclick="selectStamp('star',this)">⭐</button>
+      <button class="tool-btn" data-stamp="heart" onclick="selectStamp('heart',this)">❤️</button>
+      <button class="tool-btn" data-stamp="flower" onclick="selectStamp('flower',this)">🌸</button>
+      <button class="tool-btn" data-stamp="diamond" onclick="selectStamp('diamond',this)">💎</button>
+      <button class="tool-btn" data-stamp="circle" onclick="selectStamp('circle',this)">⚫</button>
+      <button class="tool-btn" data-stamp="square" onclick="selectStamp('square',this)">⬛</button>
     </div>
     <div class="tool-row">
       <div class="color-palette" id="colorPalette"></div>
@@ -581,6 +835,84 @@ body {
     <button class="donation-btn colors" onclick="showToast('תודה רבה! 🎨')">🖍️ ערכת צבעים - ₪36</button>
     <button class="donation-btn custom" onclick="showToast('תודה רבה! 💚')">💚 תרומה חופשית</button>
     <p class="support-footer">כל שקל עוזר לנו להוסיף עוד ציורים 🌸</p>
+  </div>
+</div>
+
+<!-- ===== ADMIN SCREEN ===== -->
+<div id="adminScreen" class="screen">
+  <div class="header">
+    <button class="header-btn" onclick="showScreen('home')">→</button>
+    <div class="logo">ניהול תוכן 🔧</div>
+    <div style="width:40px"></div>
+  </div>
+  <div class="admin-content">
+    <div class="admin-form">
+      <div class="admin-count" id="adminCount"></div>
+      <div class="admin-field">
+        <label>שם בעברית</label>
+        <input type="text" id="adminNameHe" placeholder="פרפר צבעוני">
+      </div>
+      <div class="admin-field">
+        <label>שם באנגלית</label>
+        <input type="text" id="adminNameEn" placeholder="Colorful Butterfly">
+      </div>
+      <div class="admin-field">
+        <label>קטגוריה</label>
+        <select id="adminCategory">
+          <option value="animals">חיות</option>
+          <option value="nature">טבע</option>
+          <option value="characters">דמויות</option>
+          <option value="vehicles">כלי רכב</option>
+          <option value="fantasy">פנטזיה</option>
+          <option value="mandalas">מנדלות</option>
+          <option value="geometry">גיאומטריה</option>
+          <option value="illusions">אשליות</option>
+          <option value="polyart">חיות פולי</option>
+          <option value="world">דפוסי עולם</option>
+          <option value="ancient">סמלים עתיקים</option>
+          <option value="cosmic">קוסמי</option>
+        </select>
+      </div>
+      <div class="admin-field">
+        <label>קושי</label>
+        <select id="adminDifficulty">
+          <option value="easy">קל</option>
+          <option value="medium">בינוני</option>
+          <option value="hard">מורכב</option>
+        </select>
+      </div>
+      <div class="admin-field">
+        <label>קבוצת גיל</label>
+        <select id="adminAge">
+          <option value="kids">גיל 6-8</option>
+          <option value="toddler">גיל 3-5</option>
+          <option value="tweens">גיל 9-12</option>
+          <option value="adults">מבוגרים</option>
+        </select>
+      </div>
+      <div class="admin-field">
+        <label>קוד SVG</label>
+        <textarea id="adminSvg" placeholder='<svg viewBox="0 0 400 400">...</svg>' oninput="previewAdminSvg()"></textarea>
+      </div>
+      <div class="admin-preview" id="adminPreview">
+        <span style="color:#CBD5E1">תצוגה מקדימה</span>
+      </div>
+      <button class="admin-save-btn" onclick="saveAdminPage()">הוסף ציור ✨</button>
+      <div class="admin-list" id="adminList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-emoji" id="confirmEmoji">🗑️</div>
+    <div class="confirm-title" id="confirmTitle">לנקות את הציור?</div>
+    <div class="confirm-text" id="confirmText">כל הצבעים שצבעת ימחקו</div>
+    <div class="confirm-buttons">
+      <button class="confirm-btn cancel" onclick="hideConfirm()">ביטול</button>
+      <button class="confirm-btn danger" id="confirmAction" onclick="">כן, נקה</button>
+    </div>
   </div>
 </div>
 
@@ -1183,6 +1515,7 @@ const CATEGORY_LABELS = {
 };
 
 const DIFFICULTY_LABELS = { easy: 'קל', medium: 'בינוני', hard: 'מורכב' };
+const AGE_LABELS = { toddler: 'גיל 3-5', kids: 'גיל 6-8', tweens: 'גיל 9-12', adults: 'מבוגרים' };
 
 const COLORS = [
   '#FF0000', '#FF6B00', '#FFD700', '#00CC00', '#008000',
@@ -1204,6 +1537,14 @@ let historyIndex = -1;
 let ctx = null;
 let canvas = null;
 let bgImageData = null;
+let zoomScale = 1;
+let panX = 0, panY = 0;
+let isPanning = false;
+let panStartX = 0, panStartY = 0;
+let lastPinchDist = 0;
+let currentStamp = 'star';
+let selectedDifficulty = 'all';
+let selectedAge = 'all';
 
 // ===== SCREENS =====
 function showScreen(screen) {
@@ -1214,6 +1555,9 @@ function showScreen(screen) {
     document.getElementById('colorScreen').classList.add('active');
   } else if (screen === 'support') {
     document.getElementById('supportScreen').classList.add('active');
+  } else if (screen === 'admin') {
+    document.getElementById('adminScreen').classList.add('active');
+    renderAdminList();
   }
   currentScreen = screen;
 }
@@ -1235,19 +1579,40 @@ function renderCategories() {
   }
 }
 
+function renderSecondaryFilters() {
+  const diffEl = document.getElementById('difficultyFilter');
+  const ageEl = document.getElementById('ageFilter');
+
+  diffEl.innerHTML = `<button class="filter-chip${selectedDifficulty === 'all' ? ' active' : ''}" onclick="setDifficulty('all')">הכל</button>` +
+    Object.entries(DIFFICULTY_LABELS).map(([k, v]) =>
+      `<button class="filter-chip${selectedDifficulty === k ? ' active' : ''}" onclick="setDifficulty('${k}')">${v}</button>`
+    ).join('');
+
+  ageEl.innerHTML = `<button class="filter-chip${selectedAge === 'all' ? ' active' : ''}" onclick="setAge('all')">הכל</button>` +
+    Object.entries(AGE_LABELS).map(([k, v]) =>
+      `<button class="filter-chip${selectedAge === k ? ' active' : ''}" onclick="setAge('${k}')">${v}</button>`
+    ).join('');
+}
+
+function setDifficulty(d) { selectedDifficulty = d; renderSecondaryFilters(); renderGallery(); }
+function setAge(a) { selectedAge = a; renderSecondaryFilters(); renderGallery(); }
+
 function renderGallery() {
   const grid = document.getElementById('galleryGrid');
-  const pages = selectedCategory === 'all'
+  let pages = selectedCategory === 'all'
     ? COLORING_PAGES
     : COLORING_PAGES.filter(p => p.category === selectedCategory);
 
+  if (selectedDifficulty !== 'all') pages = pages.filter(p => p.difficulty === selectedDifficulty);
+  if (selectedAge !== 'all') pages = pages.filter(p => p.ageGroup === selectedAge);
+
   if (pages.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><div class="emoji">🎨</div><p>אין ציורים בקטגוריה הזו עדיין</p></div>`;
+    grid.innerHTML = `<div class="empty-state"><div class="emoji">🎨</div><p>אין ציורים שמתאימים לסינון הזה</p></div>`;
     return;
   }
 
   grid.innerHTML = pages.map((page, i) => `
-    <div class="gallery-card" onclick="openColoring('${page.id}')" style="animation-delay: ${i * 0.05}s">
+    <div class="gallery-card" onclick="openColoring('${page.id}')" style="animation-delay: ${Math.min(i, 6) * 0.05}s">
       <div class="card-image">${page.svg}</div>
       <div class="card-info">
         <div class="card-name">${page.name_he}</div>
@@ -1272,8 +1637,12 @@ function openColoring(pageId) {
   currentTool = 'brush';
   currentColor = '#FF0000';
   brushSize = 12;
+  zoomScale = 1;
+  panX = 0;
+  panY = 0;
   updateToolButtons();
   updateUndoRedo();
+  applyZoom();
 
   // Setup canvas after screen is visible
   requestAnimationFrame(() => {
@@ -1348,6 +1717,12 @@ function startDraw(e) {
     saveState();
     return;
   }
+  if (currentTool === 'stamp') {
+    const [x, y] = getPos(e);
+    drawStamp(x, y);
+    saveState();
+    return;
+  }
   isDrawing = true;
   [lastX, lastY] = getPos(e);
 }
@@ -1418,6 +1793,15 @@ function handleTouchMove(e) {
 }
 
 // ===== FLOOD FILL =====
+function parseColor(color) {
+  const tempEl = document.createElement('div');
+  tempEl.style.color = color;
+  document.body.appendChild(tempEl);
+  const computed = getComputedStyle(tempEl).color;
+  document.body.removeChild(tempEl);
+  return computed.match(/\d+/g).map(Number);
+}
+
 function floodFill(startX, startY, fillColor) {
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const data = imageData.data;
@@ -1427,47 +1811,96 @@ function floodFill(startX, startY, fillColor) {
   const idx = (startY * w + startX) * 4;
   const startR = data[idx], startG = data[idx+1], startB = data[idx+2], startA = data[idx+3];
 
-  // Parse fill color
-  const tempEl = document.createElement('div');
-  tempEl.style.color = fillColor;
-  document.body.appendChild(tempEl);
-  const computed = getComputedStyle(tempEl).color;
-  document.body.removeChild(tempEl);
-  const [fr, fg, fb] = computed.match(/\d+/g).map(Number);
+  const [fr, fg, fb] = parseColor(fillColor);
 
   // Don't fill if same color
   if (Math.abs(startR - fr) < 10 && Math.abs(startG - fg) < 10 && Math.abs(startB - fb) < 10) return;
 
   // Don't fill dark outlines
   const brightness = (startR + startG + startB) / 3;
-  if (brightness < 60) return;
+  if (brightness < 50) return;
 
-  const tolerance = 40;
-  const stack = [[startX, startY]];
+  // Adaptive tolerance: lower for colored areas, higher for white/gray
+  const isWhitish = startR > 200 && startG > 200 && startB > 200;
+  const tolerance = isWhitish ? 50 : 35;
+
+  // Scanline flood fill - much faster than per-pixel stack
   const visited = new Uint8Array(w * h);
 
-  function matches(i) {
+  function matches(pi) {
+    const i = pi * 4;
+    // Don't cross dark outline boundaries (check against original bg)
+    if (bgImageData) {
+      const bgBright = (bgImageData.data[i] + bgImageData.data[i+1] + bgImageData.data[i+2]) / 3;
+      if (bgBright < 70) return false;
+    }
     return Math.abs(data[i] - startR) <= tolerance &&
            Math.abs(data[i+1] - startG) <= tolerance &&
-           Math.abs(data[i+2] - startB) <= tolerance &&
-           Math.abs(data[i+3] - startA) <= tolerance;
+           Math.abs(data[i+2] - startB) <= tolerance;
   }
 
-  while (stack.length > 0) {
-    const [x, y] = stack.pop();
-    if (x < 0 || x >= w || y < 0 || y >= h) continue;
-    const pi = y * w + x;
-    if (visited[pi]) continue;
+  function fillPixel(pi) {
     const i = pi * 4;
-    if (!matches(i)) continue;
-
-    visited[pi] = 1;
     data[i] = fr;
     data[i+1] = fg;
     data[i+2] = fb;
     data[i+3] = 255;
+  }
 
-    stack.push([x+1, y], [x-1, y], [x, y+1], [x, y-1]);
+  // Anti-alias edge blending
+  function blendEdgePixel(pi) {
+    const i = pi * 4;
+    if (bgImageData) {
+      const bgBright = (bgImageData.data[i] + bgImageData.data[i+1] + bgImageData.data[i+2]) / 3;
+      if (bgBright >= 70 && bgBright < 160) {
+        // Semi-dark pixel near edge - blend fill color with existing
+        const blend = (bgBright - 70) / 90;
+        data[i] = Math.round(data[i] * (1 - blend) + fr * blend);
+        data[i+1] = Math.round(data[i+1] * (1 - blend) + fg * blend);
+        data[i+2] = Math.round(data[i+2] * (1 - blend) + fb * blend);
+      }
+    }
+  }
+
+  const stack = [[startX, startY]];
+  while (stack.length > 0) {
+    let [x, y] = stack.pop();
+    if (y < 0 || y >= h) continue;
+
+    // Move left to find start of scanline
+    let pi = y * w + x;
+    while (x > 0 && !visited[pi - 1] && matches(pi - 1)) { x--; pi--; }
+
+    let spanAbove = false, spanBelow = false;
+
+    // Fill right
+    while (x < w && !visited[pi] && matches(pi)) {
+      visited[pi] = 1;
+      fillPixel(pi);
+
+      // Check neighbors for edge blending
+      if (x > 0 && !visited[pi - 1]) blendEdgePixel(pi - 1);
+      if (x < w - 1 && !visited[pi + 1]) blendEdgePixel(pi + 1);
+
+      // Check row above
+      if (y > 0) {
+        const above = (y - 1) * w + x;
+        if (!visited[above] && matches(above)) {
+          if (!spanAbove) { stack.push([x, y - 1]); spanAbove = true; }
+        } else { spanAbove = false; }
+      }
+
+      // Check row below
+      if (y < h - 1) {
+        const below = (y + 1) * w + x;
+        if (!visited[below] && matches(below)) {
+          if (!spanBelow) { stack.push([x, y + 1]); spanBelow = true; }
+        } else { spanBelow = false; }
+      }
+
+      x++;
+      pi++;
+    }
   }
 
   ctx.putImageData(imageData, 0, 0);
@@ -1494,13 +1927,88 @@ function floodFill(startX, startY, fillColor) {
 function setTool(tool) {
   currentTool = tool;
   updateToolButtons();
-  canvas.style.cursor = tool === 'fill' ? 'cell' : tool === 'eraser' ? 'grab' : 'crosshair';
+  const cursorMap = { fill: 'cell', eraser: 'grab', stamp: 'pointer', brush: 'crosshair' };
+  if (canvas) canvas.style.cursor = cursorMap[tool] || 'crosshair';
+  document.getElementById('stampShapes').style.display = tool === 'stamp' ? 'flex' : 'none';
 }
 
 function updateToolButtons() {
   document.getElementById('brushBtn').classList.toggle('active', currentTool === 'brush');
   document.getElementById('eraserBtn').classList.toggle('active', currentTool === 'eraser');
   document.getElementById('fillBtn').classList.toggle('active', currentTool === 'fill');
+  document.getElementById('stampBtn').classList.toggle('active', currentTool === 'stamp');
+}
+
+function selectStamp(shape, el) {
+  currentStamp = shape;
+  document.querySelectorAll('#stampShapes .tool-btn').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+function drawStamp(x, y) {
+  const size = brushSize * 1.5;
+  ctx.fillStyle = currentColor;
+  ctx.beginPath();
+  switch (currentStamp) {
+    case 'star':
+      drawStar(x, y, 5, size, size / 2);
+      break;
+    case 'heart':
+      drawHeart(x, y, size);
+      break;
+    case 'flower':
+      drawFlower(x, y, size);
+      break;
+    case 'diamond':
+      ctx.moveTo(x, y - size);
+      ctx.lineTo(x + size * 0.6, y);
+      ctx.lineTo(x, y + size);
+      ctx.lineTo(x - size * 0.6, y);
+      ctx.closePath();
+      break;
+    case 'circle':
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      break;
+    case 'square':
+      ctx.rect(x - size, y - size, size * 2, size * 2);
+      break;
+  }
+  ctx.fill();
+}
+
+function drawStar(cx, cy, spikes, outerR, innerR) {
+  let rot = -Math.PI / 2;
+  const step = Math.PI / spikes;
+  ctx.moveTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+  for (let i = 0; i < spikes; i++) {
+    ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+    rot += step;
+  }
+  ctx.closePath();
+}
+
+function drawHeart(cx, cy, size) {
+  const s = size * 0.8;
+  ctx.moveTo(cx, cy + s * 0.7);
+  ctx.bezierCurveTo(cx - s * 1.2, cy - s * 0.3, cx - s * 0.6, cy - s * 1.2, cx, cy - s * 0.5);
+  ctx.bezierCurveTo(cx + s * 0.6, cy - s * 1.2, cx + s * 1.2, cy - s * 0.3, cx, cy + s * 0.7);
+}
+
+function drawFlower(cx, cy, size) {
+  const petals = 6;
+  const petalR = size * 0.6;
+  for (let i = 0; i < petals; i++) {
+    const angle = (Math.PI * 2 / petals) * i;
+    const px = cx + Math.cos(angle) * size * 0.5;
+    const py = cy + Math.sin(angle) * size * 0.5;
+    ctx.moveTo(px + petalR, py);
+    ctx.arc(px, py, petalR, 0, Math.PI * 2);
+  }
+  // Center
+  ctx.moveTo(cx + size * 0.3, cy);
+  ctx.arc(cx, cy, size * 0.3, 0, Math.PI * 2);
 }
 
 function setBrushSize(val) {
@@ -1591,6 +2099,33 @@ function saveImage() {
   showToast('הציור נשמר! 💾');
 }
 
+// ===== SHARE =====
+async function shareImage() {
+  if (!canvas) return;
+  try {
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    const file = new File([blob], `tzvoni-${currentPage.id}.png`, { type: 'image/png' });
+
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: 'ציור מצבעוני 🎨',
+        text: `תראו מה צבעתי! ${currentPage.name_he} 🎨`,
+        files: [file]
+      });
+      showToast('שותף בהצלחה! 💌');
+    } else {
+      // Fallback: download and suggest sharing
+      saveImage();
+      showToast('הציור נשמר - שלחי אותו מהגלריה! 💌');
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      saveImage();
+      showToast('הציור נשמר - שלחי אותו מהגלריה! 💌');
+    }
+  }
+}
+
 // ===== COLOR PALETTE =====
 function renderColorPalette() {
   const palette = document.getElementById('colorPalette');
@@ -1620,6 +2155,89 @@ function selectColor(color, el) {
   }
 }
 
+// ===== ZOOM & PAN =====
+function applyZoom() {
+  const wrapper = document.getElementById('canvasWrapper');
+  wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+  document.getElementById('zoomLevel').textContent = Math.round(zoomScale * 100) + '%';
+}
+
+function zoomIn() {
+  if (zoomScale >= 5) return;
+  zoomScale = Math.min(5, zoomScale * 1.3);
+  applyZoom();
+}
+
+function zoomOut() {
+  if (zoomScale <= 0.5) return;
+  zoomScale = Math.max(0.5, zoomScale / 1.3);
+  if (zoomScale < 1.05 && zoomScale > 0.95) { zoomScale = 1; panX = 0; panY = 0; }
+  applyZoom();
+}
+
+function resetZoom() {
+  zoomScale = 1;
+  panX = 0;
+  panY = 0;
+  applyZoom();
+}
+
+// Mouse wheel zoom
+document.addEventListener('wheel', e => {
+  if (currentScreen !== 'color') return;
+  if (!e.target.closest('.canvas-container')) return;
+  e.preventDefault();
+  if (e.deltaY < 0) zoomIn(); else zoomOut();
+}, { passive: false });
+
+// Pinch to zoom (touch)
+let pinchActive = false;
+document.addEventListener('touchstart', e => {
+  if (currentScreen !== 'color') return;
+  if (!e.target.closest('.canvas-container')) return;
+  if (e.touches.length === 2) {
+    pinchActive = true;
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    lastPinchDist = Math.sqrt(dx * dx + dy * dy);
+  }
+}, { passive: false });
+
+document.addEventListener('touchmove', e => {
+  if (!pinchActive || e.touches.length !== 2) return;
+  e.preventDefault();
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const delta = dist / lastPinchDist;
+  zoomScale = Math.max(0.5, Math.min(5, zoomScale * delta));
+  lastPinchDist = dist;
+  applyZoom();
+}, { passive: false });
+
+document.addEventListener('touchend', e => {
+  if (e.touches.length < 2) pinchActive = false;
+}, { passive: false });
+
+// ===== CONFIRM DIALOG =====
+function confirmClear() {
+  showConfirm('🗑️', 'לנקות את הציור?', 'כל הצבעים שצבעת ימחקו', 'כן, נקה', clearCanvas);
+}
+
+function showConfirm(emoji, title, text, actionText, callback) {
+  document.getElementById('confirmEmoji').textContent = emoji;
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').textContent = text;
+  const btn = document.getElementById('confirmAction');
+  btn.textContent = actionText;
+  btn.onclick = () => { hideConfirm(); callback(); };
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function hideConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+
 // ===== TOAST =====
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -1628,8 +2246,123 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+// ===== ADMIN PANEL =====
+let logoClicks = 0;
+let logoClickTimer = null;
+
+function handleLogoClick() {
+  logoClicks++;
+  clearTimeout(logoClickTimer);
+  logoClickTimer = setTimeout(() => { logoClicks = 0; }, 2000);
+  if (logoClicks >= 5) {
+    logoClicks = 0;
+    showScreen('admin');
+    showToast('מצב ניהול 🔧');
+  }
+}
+
+function getCustomPages() {
+  try { return JSON.parse(localStorage.getItem('tzvoni_custom_pages') || '[]'); }
+  catch { return []; }
+}
+
+function saveCustomPages(pages) {
+  localStorage.setItem('tzvoni_custom_pages', JSON.stringify(pages));
+}
+
+function loadCustomPages() {
+  const custom = getCustomPages();
+  custom.forEach(page => {
+    if (!COLORING_PAGES.find(p => p.id === page.id)) {
+      COLORING_PAGES.push(page);
+    }
+  });
+}
+
+function previewAdminSvg() {
+  const svg = document.getElementById('adminSvg').value.trim();
+  const preview = document.getElementById('adminPreview');
+  if (svg.startsWith('<svg')) {
+    preview.innerHTML = svg;
+  } else {
+    preview.innerHTML = '<span style="color:#CBD5E1">תצוגה מקדימה</span>';
+  }
+}
+
+function saveAdminPage() {
+  const nameHe = document.getElementById('adminNameHe').value.trim();
+  const nameEn = document.getElementById('adminNameEn').value.trim();
+  const category = document.getElementById('adminCategory').value;
+  const difficulty = document.getElementById('adminDifficulty').value;
+  const ageGroup = document.getElementById('adminAge').value;
+  const svg = document.getElementById('adminSvg').value.trim();
+
+  if (!nameHe || !svg) {
+    showToast('חסר שם או SVG');
+    return;
+  }
+  if (!svg.startsWith('<svg')) {
+    showToast('SVG לא תקין');
+    return;
+  }
+
+  const id = 'custom-' + Date.now();
+  const newPage = { id, name_he: nameHe, name_en: nameEn || nameHe, category, difficulty, ageGroup, svg };
+
+  // Add to runtime array
+  COLORING_PAGES.push(newPage);
+
+  // Save to localStorage
+  const custom = getCustomPages();
+  custom.push(newPage);
+  saveCustomPages(custom);
+
+  // Clear form
+  document.getElementById('adminNameHe').value = '';
+  document.getElementById('adminNameEn').value = '';
+  document.getElementById('adminSvg').value = '';
+  document.getElementById('adminPreview').innerHTML = '<span style="color:#CBD5E1">תצוגה מקדימה</span>';
+
+  renderAdminList();
+  renderGallery();
+  showToast(`${nameHe} נוסף! ✨`);
+}
+
+function deleteAdminPage(id) {
+  const custom = getCustomPages().filter(p => p.id !== id);
+  saveCustomPages(custom);
+  const idx = COLORING_PAGES.findIndex(p => p.id === id);
+  if (idx !== -1) COLORING_PAGES.splice(idx, 1);
+  renderAdminList();
+  renderGallery();
+  showToast('נמחק');
+}
+
+function renderAdminList() {
+  const custom = getCustomPages();
+  const total = COLORING_PAGES.length;
+  document.getElementById('adminCount').textContent = `${total} ציורים (${custom.length} מותאמים אישית)`;
+
+  const list = document.getElementById('adminList');
+  if (custom.length === 0) {
+    list.innerHTML = '<p style="text-align:center;color:#CBD5E1;font-size:0.85rem">אין ציורים מותאמים אישית</p>';
+    return;
+  }
+  list.innerHTML = '<div class="admin-title">ציורים מותאמים אישית</div>' +
+    custom.map(p => `
+      <div class="admin-list-item">
+        ${p.svg ? p.svg.replace(/<svg/, '<svg width="40" height="40"') : ''}
+        <span class="name">${p.name_he}</span>
+        <span style="font-size:0.7rem;color:#9CA3AF">${CATEGORY_LABELS[p.category] || p.category}</span>
+        <button class="admin-delete-btn" onclick="deleteAdminPage('${p.id}')">🗑️</button>
+      </div>
+    `).join('');
+}
+
 // ===== INIT =====
+loadCustomPages();
 renderCategories();
+renderSecondaryFilters();
 renderGallery();
 
 // Prevent pull-to-refresh on mobile
