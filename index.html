@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>צבעוני 🎨 - צביעה בחינם לילדים</title>
+<meta name="description" content="אפליקציית צביעה חינמית לילדים - בלי פרסומות, בלי רכישות. פשוט צביעה כיפית!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-primary: #FF6B9D;
+  --color-secondary: #7DD3FC;
+  --color-accent: #A78BFA;
+  --color-success: #4ADE80;
+  --color-card: #FFFFFF;
+  --color-text: #1F2937;
+  --color-text-muted: #6B7280;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Assistant', system-ui, sans-serif;
+  background: linear-gradient(135deg, #FFF5F7 0%, #F0F9FF 50%, #FDF4FF 100%);
+  color: var(--color-text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  direction: rtl;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ===== SCREENS ===== */
+.screen { display: none; height: 100vh; height: 100dvh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-btn {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+.header-btn:hover { background: rgba(0,0,0,0.05); }
+.header-actions { display: flex; gap: 4px; }
+
+/* ===== GALLERY ===== */
+.gallery-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
+}
+
+.subtitle {
+  text-align: center;
+  padding: 16px 16px 8px;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+/* Category Filter */
+.category-filter {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.category-filter::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 50px;
+  background: var(--color-card);
+  box-shadow: var(--shadow-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.cat-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.cat-btn.active {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+}
+
+/* Grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 4px 16px;
+}
+
+@media (min-width: 600px) {
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+}
+
+.gallery-card {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+.gallery-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.gallery-card:active { transform: scale(0.97); }
+
+.card-image {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FAFAFA;
+  padding: 10px;
+}
+.card-image svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.card-info {
+  padding: 8px 10px;
+  text-align: center;
+}
+.card-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.card-category {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+.card-difficulty {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 50px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #F3F4F6;
+  color: var(--color-text-muted);
+}
+.card-difficulty.easy { background: #DCFCE7; color: #166534; }
+.card-difficulty.medium { background: #FEF3C7; color: #92400E; }
+.card-difficulty.hard { background: #FCE7F3; color: #9D174D; }
+
+/* ===== COLORING SCREEN ===== */
+.coloring-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+}
+.back-btn:hover { background: rgba(0,0,0,0.05); }
+
+.coloring-title {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.coloring-actions { display: flex; gap: 4px; }
+.coloring-actions button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+.coloring-actions button:hover { background: rgba(0,0,0,0.05); }
+.coloring-actions button:disabled { opacity: 0.3; cursor: default; }
+
+/* Canvas Area */
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: white;
+  position: relative;
+  touch-action: none;
+}
+
+#coloringCanvas {
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* Toolbar */
+.toolbar {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 8px 12px;
+}
+
+.tool-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.tool-row:last-child { margin-bottom: 0; }
+
+.tool-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  background: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.tool-btn:hover { border-color: var(--color-primary); }
+.tool-btn.active {
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, #FFF5F7, #FCE7F3);
+}
+
+.brush-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #E5E7EB;
+  outline: none;
+  min-width: 60px;
+}
+.brush-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
+}
+
+.brush-size-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  min-width: 28px;
+  text-align: center;
+}
+
+/* Color Palette */
+.color-palette {
+  display: flex;
+  gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  align-items: center;
+  padding: 2px 0;
+}
+.color-palette::-webkit-scrollbar { display: none; }
+
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  position: relative;
+}
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.active {
+  border-color: var(--color-text);
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.color-swatch.white-swatch {
+  box-shadow: inset 0 0 0 1px #E5E7EB;
+}
+
+.color-picker-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.color-picker-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px dashed #CBD5E1;
+  cursor: pointer;
+  background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+.color-picker-btn:hover { transform: scale(1.15); border-color: var(--color-text); }
+#customColorPicker {
+  position: absolute;
+  opacity: 0;
+  width: 32px;
+  height: 32px;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+/* ===== SUPPORT SCREEN ===== */
+.support-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.support-heart {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.support-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.support-text {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: 400px;
+  margin: 0 auto 24px;
+}
+
+.donation-btn {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 14px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.donation-btn:hover { transform: translateY(-2px); }
+.donation-btn.coffee {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  color: #92400E;
+}
+.donation-btn.colors {
+  background: linear-gradient(135deg, #DBEAFE, #93C5FD);
+  color: #1E40AF;
+}
+.donation-btn.custom {
+  background: linear-gradient(135deg, #DCFCE7, #86EFAC);
+  color: #166534;
+}
+
+.support-footer {
+  margin-top: 32px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--color-text);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-muted);
+}
+.empty-state .emoji { font-size: 3rem; margin-bottom: 12px; }
+.empty-state p { font-size: 1rem; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.gallery-card { animation: fadeInUp 0.4s ease backwards; }
+.gallery-card:nth-child(1) { animation-delay: 0.05s; }
+.gallery-card:nth-child(2) { animation-delay: 0.1s; }
+.gallery-card:nth-child(3) { animation-delay: 0.15s; }
+.gallery-card:nth-child(4) { animation-delay: 0.2s; }
+.gallery-card:nth-child(5) { animation-delay: 0.25s; }
+.gallery-card:nth-child(6) { animation-delay: 0.3s; }
+
+/* ===== RESPONSIVE ===== */
+@media (min-width: 768px) {
+  .gallery-grid { padding: 4px 24px; }
+  .toolbar { padding: 10px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HOME SCREEN ===== -->
+<div id="homeScreen" class="screen active">
+  <div class="header">
+    <div class="logo">צבעוני 🎨</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showScreen('support')" title="תמיכה">💚</button>
+    </div>
+  </div>
+  <div class="gallery-container">
+    <div class="subtitle">צביעה בחינם לילדים</div>
+    <div class="category-filter" id="categoryFilter"></div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<!-- ===== COLORING SCREEN ===== -->
+<div id="colorScreen" class="screen">
+  <div class="coloring-header">
+    <button class="back-btn" onclick="showScreen('home')">→</button>
+    <div class="coloring-title" id="coloringTitle"></div>
+    <div class="coloring-actions">
+      <button onclick="undo()" id="undoBtn" title="בטל" disabled>↩️</button>
+      <button onclick="redo()" id="redoBtn" title="חזור" disabled>↪️</button>
+      <button onclick="clearCanvas()" title="נקה">🗑️</button>
+      <button onclick="saveImage()" title="שמור">💾</button>
+    </div>
+  </div>
+  <div class="canvas-container" id="canvasContainer">
+    <canvas id="coloringCanvas"></canvas>
+  </div>
+  <div class="toolbar">
+    <div class="tool-row">
+      <button class="tool-btn active" id="brushBtn" onclick="setTool('brush')" title="מברשת">🖌️</button>
+      <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')" title="מחק">🧹</button>
+      <button class="tool-btn" id="fillBtn" onclick="setTool('fill')" title="מילוי">🪣</button>
+      <input type="range" class="brush-slider" id="brushSlider" min="2" max="50" value="12" oninput="setBrushSize(this.value)">
+      <span class="brush-size-label" id="brushSizeLabel">12</span>
+    </div>
+    <div class="tool-row">
+      <div class="color-palette" id="colorPalette"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUPPORT SCREEN ===== -->
+<div id="supportScreen" class="screen">
+  <div class="header">
+    <button class="header-btn" onclick="showScreen('home')">→</button>
+    <div class="logo">צבעוני 🎨</div>
+    <div style="width:40px"></div>
+  </div>
+  <div class="support-content">
+    <div class="support-heart">💚</div>
+    <div class="support-title">תמכו בצבעוני</div>
+    <p class="support-text">
+      האפליקציה הזו בחינם לגמרי.<br>
+      למה? כי כל ילד ראוי לצבוע, גם אם להורים אין כסף לאפליקציות.<br><br>
+      אם נהניתם ורוצים לעזור לנו להמשיך ליצור:
+    </p>
+    <button class="donation-btn coffee" onclick="showToast('תודה רבה! 💛')">☕ קפה קטן - ₪18</button>
+    <button class="donation-btn colors" onclick="showToast('תודה רבה! 🎨')">🖍️ ערכת צבעים - ₪36</button>
+    <button class="donation-btn custom" onclick="showToast('תודה רבה! 💚')">💚 תרומה חופשית</button>
+    <p class="support-footer">כל שקל עוזר לנו להוסיף עוד ציורים 🌸</p>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA: Coloring Pages with Inline SVGs =====
+const COLORING_PAGES = [
+  {
+    id: 'lion-001',
+    name_he: 'אריה שמח',
+    name_en: 'Happy Lion',
+    category: 'animals',
+    difficulty: 'easy',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- mane --><circle cx="200" cy="175" r="95" stroke-width="3"/><path d="M200 80 Q215 60 230 82M170 85 Q160 62 148 87M240 95 Q258 75 262 100M138 100 Q118 82 120 108M260 120 Q282 108 278 135M120 125 Q98 115 102 142M268 150 Q290 145 282 170M110 155 Q88 152 98 178M265 180 Q286 182 275 205M112 185 Q92 188 105 210"/><!-- face --><circle cx="200" cy="180" r="65" fill="white" stroke-width="3"/><!-- eyes --><ellipse cx="178" cy="165" rx="10" ry="12"/><ellipse cx="222" cy="165" rx="10" ry="12"/><circle cx="180" cy="162" r="4" fill="#222"/><circle cx="224" cy="162" r="4" fill="#222"/><!-- nose --><ellipse cx="200" cy="190" rx="12" ry="8"/><!-- mouth --><path d="M188 200 Q200 215 212 200"/><!-- whiskers --><path d="M160 190 L130 185M160 195 L132 198M240 190 L270 185M240 195 L268 198"/><!-- body --><path d="M165 240 Q165 310 175 340M235 240 Q235 310 225 340"/><!-- front legs --><path d="M175 340 Q160 342 160 355 Q160 365 180 365 L220 365 Q240 365 240 355 Q240 342 225 340"/><!-- tail --><path d="M235 280 Q280 270 290 240 Q295 230 285 235"/></g></svg>`
+  },
+  {
+    id: 'butterfly-001',
+    name_he: 'פרפר יפה',
+    name_en: 'Pretty Butterfly',
+    category: 'animals',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- body --><ellipse cx="200" cy="220" rx="10" ry="55"/><!-- head --><circle cx="200" cy="155" r="16"/><!-- eyes --><circle cx="194" cy="152" r="3" fill="#222"/><circle cx="206" cy="152" r="3" fill="#222"/><!-- smile --><path d="M194 160 Q200 166 206 160"/><!-- antennae --><path d="M194 140 Q175 110 165 100"/><circle cx="163" cy="97" r="5"/><path d="M206 140 Q225 110 235 100"/><circle cx="237" cy="97" r="5"/><!-- upper wings --><path d="M190 195 Q120 140 110 180 Q100 220 150 230 Q170 235 190 220" stroke-width="3"/><path d="M210 195 Q280 140 290 180 Q300 220 250 230 Q230 235 210 220" stroke-width="3"/><!-- lower wings --><path d="M190 225 Q140 250 135 280 Q130 310 170 295 Q190 285 190 260" stroke-width="3"/><path d="M210 225 Q260 250 265 280 Q270 310 230 295 Q210 285 210 260" stroke-width="3"/><!-- wing patterns --><circle cx="150" cy="190" r="15"/><circle cx="250" cy="190" r="15"/><circle cx="155" cy="275" r="10"/><circle cx="245" cy="275" r="10"/><circle cx="140" cy="200" r="6"/><circle cx="260" cy="200" r="6"/></g></svg>`
+  },
+  {
+    id: 'cat-001',
+    name_he: 'חתול חמוד',
+    name_en: 'Cute Cat',
+    category: 'animals',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- head --><circle cx="200" cy="170" r="70"/><!-- ears --><path d="M148 120 L130 60 L170 100" fill="white"/><path d="M252 120 L270 60 L230 100" fill="white"/><!-- inner ears --><path d="M148 115 L138 75 L165 105"/><path d="M252 115 L262 75 L235 105"/><!-- eyes --><ellipse cx="175" cy="165" rx="14" ry="16"/><ellipse cx="225" cy="165" rx="14" ry="16"/><ellipse cx="175" cy="168" rx="7" ry="10" fill="#222"/><ellipse cx="225" cy="168" rx="7" ry="10" fill="#222"/><!-- nose --><path d="M195 185 L200 192 L205 185 Z"/><!-- mouth --><path d="M200 192 L200 200M192 200 Q200 210 208 200"/><!-- whiskers --><path d="M165 190 L120 182M165 195 L122 200M165 200 L125 215M235 190 L280 182M235 195 L278 200M235 200 L275 215"/><!-- body --><path d="M155 235 Q145 280 145 320 Q145 355 175 355 L225 355 Q255 355 255 320 Q255 280 245 235"/><!-- front legs --><path d="M165 310 L165 355M175 355 Q165 360 160 355"/><path d="M235 310 L235 355M225 355 Q235 360 240 355"/><!-- tail --><path d="M255 300 Q290 290 300 260 Q310 230 295 235 Q280 240 285 260"/><!-- paw lines --><path d="M160 352 L160 345M168 352 L168 347M176 352 L176 347"/><path d="M224 352 L224 347M232 352 L232 347M240 352 L240 345"/></g></svg>`
+  },
+  {
+    id: 'sunflower-001',
+    name_he: 'חמנייה',
+    name_en: 'Sunflower',
+    category: 'nature',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- petals --><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(0,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(30,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(60,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(90,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(120,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(150,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(180,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(210,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(240,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(270,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(300,200,155)"/><ellipse cx="200" cy="105" rx="18" ry="35" transform="rotate(330,200,155)"/><!-- center --><circle cx="200" cy="155" r="30" fill="white"/><!-- center pattern --><circle cx="200" cy="155" r="15"/><circle cx="200" cy="155" r="8"/><!-- stem --><path d="M200 190 L200 370" stroke-width="4"/><!-- leaves --><path d="M200 260 Q150 240 140 270 Q130 300 170 280 Q185 272 200 270"/><path d="M200 300 Q250 280 260 310 Q270 340 230 320 Q215 312 200 310"/><!-- small dots in center --><circle cx="192" cy="148" r="2" fill="#222"/><circle cx="208" cy="148" r="2" fill="#222"/><circle cx="200" cy="162" r="2" fill="#222"/><circle cx="190" cy="160" r="2" fill="#222"/><circle cx="210" cy="160" r="2" fill="#222"/></g></svg>`
+  },
+  {
+    id: 'tree-001',
+    name_he: 'עץ גדול',
+    name_en: 'Big Tree',
+    category: 'nature',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- trunk --><path d="M180 250 L175 370 L225 370 L220 250" stroke-width="3"/><!-- trunk texture --><path d="M190 280 L190 320M210 290 L210 340M200 260 L200 360"/><!-- crown --><circle cx="200" cy="160" r="85"/><!-- crown detail --><path d="M140 180 Q160 150 180 170"/><path d="M210 130 Q240 110 260 140"/><path d="M155 135 Q175 110 200 130"/><path d="M230 170 Q250 155 265 175"/><!-- apples/fruits --><circle cx="155" cy="150" r="10"/><circle cx="230" cy="120" r="10"/><circle cx="190" cy="110" r="10"/><circle cx="245" cy="165" r="10"/><circle cx="170" cy="195" r="10"/><!-- grass --><path d="M100 370 Q110 355 120 370M140 370 Q150 358 160 370M220 370 Q230 355 240 370M260 370 Q270 358 280 370M300 370 Q310 358 320 370"/></g></svg>`
+  },
+  {
+    id: 'princess-001',
+    name_he: 'נסיכה',
+    name_en: 'Princess',
+    category: 'characters',
+    difficulty: 'medium',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- crown --><path d="M160 110 L155 70 L175 95 L200 60 L225 95 L245 70 L240 110"/><circle cx="155" cy="67" r="5"/><circle cx="200" cy="57" r="5"/><circle cx="245" cy="67" r="5"/><!-- crown base --><rect x="158" y="105" width="84" height="15" rx="3"/><!-- head --><circle cx="200" cy="155" r="45"/><!-- hair sides --><path d="M155 155 Q145 120 158 108"/><path d="M245 155 Q255 120 242 108"/><path d="M155 155 Q140 180 145 210"/><path d="M245 155 Q260 180 255 210"/><!-- eyes --><ellipse cx="185" cy="150" rx="6" ry="8"/><ellipse cx="215" cy="150" rx="6" ry="8"/><circle cx="185" cy="148" r="3" fill="#222"/><circle cx="215" cy="148" r="3" fill="#222"/><!-- eyelashes --><path d="M178 144 L175 140M182 142 L180 137M216 142 L218 137M222 144 L225 140"/><!-- blush --><circle cx="172" cy="162" r="6" stroke="none" fill="#FFE4E1"/><circle cx="228" cy="162" r="6" stroke="none" fill="#FFE4E1"/><!-- nose --><path d="M200 158 L198 164"/><!-- mouth --><path d="M192 172 Q200 180 208 172"/><!-- necklace --><path d="M175 198 Q200 210 225 198"/><circle cx="200" cy="207" r="5"/><!-- dress --><path d="M170 200 L140 370 L260 370 L230 200"/><path d="M170 200 Q200 215 230 200"/><!-- dress details --><path d="M200 230 L200 370"/><path d="M170 270 Q200 285 230 270"/><path d="M155 330 Q200 348 245 330"/><!-- sleeves --><path d="M170 205 Q145 215 140 240 Q138 250 150 248"/><path d="M230 205 Q255 215 260 240 Q262 250 250 248"/><!-- hands --><circle cx="148" cy="250" r="8"/><circle cx="252" cy="250" r="8"/></g></svg>`
+  },
+  {
+    id: 'robot-001',
+    name_he: 'רובוט חבר',
+    name_en: 'Friendly Robot',
+    category: 'characters',
+    difficulty: 'medium',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- antenna --><line x1="200" y1="70" x2="200" y2="95"/><circle cx="200" cy="65" r="8"/><!-- head --><rect x="145" y="95" width="110" height="80" rx="15"/><!-- eyes --><rect x="165" y="115" width="25" height="25" rx="5"/><rect x="210" y="115" width="25" height="25" rx="5"/><circle cx="177" cy="127" r="6" fill="#222"/><circle cx="222" cy="127" r="6" fill="#222"/><!-- mouth --><rect x="170" y="152" width="60" height="12" rx="4"/><line x1="185" y1="152" x2="185" y2="164"/><line x1="200" y1="152" x2="200" y2="164"/><line x1="215" y1="152" x2="215" y2="164"/><!-- neck --><rect x="185" y="175" width="30" height="15" rx="3"/><!-- body --><rect x="135" y="190" width="130" height="100" rx="15"/><!-- chest panel --><rect x="165" y="210" width="70" height="50" rx="8"/><circle cx="185" cy="230" r="8"/><circle cx="215" cy="230" r="8"/><rect x="180" y="245" width="40" height="8" rx="3"/><!-- arms --><rect x="100" y="200" width="30" height="70" rx="10"/><rect x="270" y="200" width="30" height="70" rx="10"/><!-- hands --><circle cx="115" cy="278" r="12"/><circle cx="285" cy="278" r="12"/><line x1="108" y1="278" x2="122" y2="278"/><line x1="115" y1="271" x2="115" y2="285"/><line x1="278" y1="278" x2="292" y2="278"/><line x1="285" y1="271" x2="285" y2="285"/><!-- legs --><rect x="155" y="290" width="35" height="60" rx="10"/><rect x="210" y="290" width="35" height="60" rx="10"/><!-- feet --><rect x="145" y="345" width="55" height="20" rx="8"/><rect x="200" y="345" width="55" height="20" rx="8"/></g></svg>`
+  },
+  {
+    id: 'car-001',
+    name_he: 'מכונית',
+    name_en: 'Car',
+    category: 'vehicles',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- body --><path d="M60 230 L60 270 Q60 285 75 285 L325 285 Q340 285 340 270 L340 230 Q340 215 325 215 L75 215 Q60 215 60 230Z"/><!-- roof --><path d="M110 215 L140 155 Q145 145 160 145 L240 145 Q255 145 260 155 L290 215"/><!-- windows --><path d="M150 215 L170 160 L205 160 L205 215"/><path d="M215 215 L215 160 L245 160 L260 215"/><!-- wheels --><circle cx="120" cy="290" r="30"/><circle cx="120" cy="290" r="15"/><circle cx="280" cy="290" r="30"/><circle cx="280" cy="290" r="15"/><!-- wheel details --><line x1="120" y1="260" x2="120" y2="268"/><line x1="120" y1="312" x2="120" y2="320"/><line x1="98" y1="282" x2="90" y2="282"/><line x1="150" y1="282" x2="142" y2="282"/><line x1="280" y1="260" x2="280" y2="268"/><line x1="280" y1="312" x2="280" y2="320"/><line x1="258" y1="282" x2="250" y2="282"/><line x1="310" y1="282" x2="302" y2="282"/><!-- headlights --><rect x="325" y="225" width="18" height="15" rx="4"/><rect x="57" y="225" width="18" height="15" rx="4"/><!-- door handle --><line x1="180" y1="240" x2="200" y2="240"/><line x1="230" y1="240" x2="250" y2="240"/><!-- bumper --><path d="M70 285 L330 285"/></g></svg>`
+  },
+  {
+    id: 'rocket-001',
+    name_he: 'טיל לחלל',
+    name_en: 'Space Rocket',
+    category: 'vehicles',
+    difficulty: 'medium',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- body --><path d="M175 300 L175 150 Q175 80 200 50 Q225 80 225 150 L225 300"/><!-- nose cone --><path d="M175 150 Q200 50 225 150"/><!-- window --><circle cx="200" cy="160" r="22"/><circle cx="200" cy="160" r="14"/><!-- small window --><circle cx="200" cy="215" r="10"/><!-- body lines --><path d="M175 250 L225 250"/><path d="M175 195 L225 195"/><!-- left fin --><path d="M175 260 L130 320 L130 340 L175 310"/><path d="M140 330 L160 315"/><!-- right fin --><path d="M225 260 L270 320 L270 340 L225 310"/><path d="M260 330 L240 315"/><!-- bottom --><path d="M175 300 Q200 315 225 300"/><!-- flames --><path d="M180 310 Q185 340 190 355 Q195 370 200 345 Q205 370 210 355 Q215 340 220 310"/><path d="M185 315 Q190 335 195 350 Q200 365 205 350 Q210 335 215 315"/><!-- stars around --><path d="M100 100 L105 90 L110 100 L105 110Z" fill="#222" stroke="none"/><path d="M300 140 L305 130 L310 140 L305 150Z" fill="#222" stroke="none"/><path d="M80 200 L85 190 L90 200 L85 210Z" fill="#222" stroke="none"/><path d="M320 80 L325 70 L330 80 L325 90Z" fill="#222" stroke="none"/><circle cx="340" cy="200" r="3" fill="#222"/><circle cx="70" cy="150" r="3" fill="#222"/><circle cx="310" cy="250" r="2" fill="#222"/></g></svg>`
+  },
+  {
+    id: 'unicorn-001',
+    name_he: 'חד קרן',
+    name_en: 'Unicorn',
+    category: 'fantasy',
+    difficulty: 'medium',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- horn --><path d="M220 85 L240 30 L250 90"/><line x1="228" y1="70" x2="245" y2="55"/><line x1="232" y1="80" x2="248" y2="68"/><!-- ear --><path d="M205 88 L195 60 L215 80"/><!-- head --><path d="M180 140 Q160 115 175 90 Q195 70 225 85 Q260 95 260 130 Q260 155 240 165"/><!-- eye --><circle cx="215" cy="115" r="9"/><circle cx="217" cy="113" r="4" fill="#222"/><!-- nostril --><circle cx="180" cy="132" r="3"/><!-- mouth --><path d="M178 142 Q185 150 195 145"/><!-- mane --><path d="M205 85 Q185 75 190 95 Q180 85 185 105 Q172 98 180 118 Q165 115 175 135"/><path d="M225 85 Q235 75 230 95 Q240 88 235 108"/><!-- neck --><path d="M240 165 L255 210"/><path d="M180 145 L165 210"/><!-- body --><ellipse cx="210" cy="245" rx="80" ry="50"/><!-- legs --><path d="M155 275 L145 350 L160 350 L165 285"/><path d="M180 280 L175 350 L190 350 L192 285"/><path d="M235 280 L232 350 L247 350 L245 285"/><path d="M258 275 L262 350 L277 350 L270 280"/><!-- hooves --><rect x="142" y="348" width="20" height="8" rx="3"/><rect x="172" y="348" width="20" height="8" rx="3"/><rect x="229" y="348" width="20" height="8" rx="3"/><rect x="259" y="348" width="20" height="8" rx="3"/><!-- tail --><path d="M285 230 Q320 220 330 200 Q340 180 325 190 Q340 170 320 180 Q335 160 315 175"/><path d="M285 240 Q310 245 325 235"/><!-- stars --><path d="M100 80 L103 70 L106 80 L103 90Z" fill="#222" stroke="none"/><path d="M320 100 L323 90 L326 100 L323 110Z" fill="#222" stroke="none"/><circle cx="85" cy="130" r="2" fill="#222"/></g></svg>`
+  },
+  {
+    id: 'mandala-001',
+    name_he: 'מנדלה פרחונית',
+    name_en: 'Flower Mandala',
+    category: 'mandalas',
+    difficulty: 'hard',
+    ageGroup: 'tweens',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><!-- outer circle --><circle cx="200" cy="200" r="170"/><!-- inner circles --><circle cx="200" cy="200" r="140"/><circle cx="200" cy="200" r="105"/><circle cx="200" cy="200" r="70"/><circle cx="200" cy="200" r="35"/><circle cx="200" cy="200" r="15"/><!-- 8-petal flower layer 1 --><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(0,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(45,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(90,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(135,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(180,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(225,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(270,200,200)"/><ellipse cx="200" cy="130" rx="16" ry="35" transform="rotate(315,200,200)"/><!-- 8-petal flower layer 2 (outer) --><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(22.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(67.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(112.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(157.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(202.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(247.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(292.5,200,200)"/><ellipse cx="200" cy="85" rx="14" ry="40" transform="rotate(337.5,200,200)"/><!-- dots on outer ring --><circle cx="200" cy="40" r="5" transform="rotate(0,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(45,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(90,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(135,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(180,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(225,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(270,200,200)"/><circle cx="200" cy="40" r="5" transform="rotate(315,200,200)"/><!-- teardrop shapes between circles --><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(0,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(45,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(90,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(135,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(180,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(225,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(270,200,200)"/><path d="M200 100 Q210 115 200 130 Q190 115 200 100" transform="rotate(315,200,200)"/></g></svg>`
+  },
+  {
+    id: 'fish-001',
+    name_he: 'דג צבעוני',
+    name_en: 'Colorful Fish',
+    category: 'animals',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- body --><ellipse cx="200" cy="200" rx="110" ry="65"/><!-- tail --><path d="M310 200 L360 155 L360 245 Z"/><!-- eye --><circle cx="145" cy="185" r="14"/><circle cx="148" cy="183" r="7" fill="#222"/><!-- mouth --><path d="M92 200 Q100 210 110 200"/><!-- fin top --><path d="M190 135 Q200 80 230 90 Q240 100 230 135"/><!-- fin bottom --><path d="M200 265 Q210 300 235 295 Q240 285 230 265"/><!-- side fin --><path d="M160 215 Q140 250 165 260 Q180 255 175 230"/><!-- scales pattern --><path d="M140 200 Q155 185 170 200 Q155 215 140 200"/><path d="M170 185 Q185 170 200 185 Q185 200 170 185"/><path d="M170 215 Q185 200 200 215 Q185 230 170 215"/><path d="M200 200 Q215 185 230 200 Q215 215 200 200"/><path d="M200 170 Q215 155 230 170 Q215 185 200 170"/><path d="M200 230 Q215 215 230 230 Q215 245 200 230"/><path d="M230 185 Q245 170 260 185 Q245 200 230 185"/><path d="M230 215 Q245 200 260 215 Q245 230 230 215"/><path d="M260 200 Q275 185 290 200 Q275 215 260 200"/><!-- bubbles --><circle cx="85" cy="155" r="6"/><circle cx="72" cy="175" r="4"/><circle cx="68" cy="145" r="3"/></g></svg>`
+  },
+  {
+    id: 'house-001',
+    name_he: 'בית חמים',
+    name_en: 'Cozy House',
+    category: 'nature',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- roof --><path d="M70 185 L200 80 L330 185"/><path d="M90 185 L200 95 L310 185"/><!-- walls --><rect x="100" y="185" width="200" height="155" rx="2"/><!-- door --><rect x="170" y="250" width="60" height="90" rx="5"/><circle cx="220" cy="300" r="5"/><!-- windows --><rect x="115" y="210" width="40" height="40" rx="5"/><line x1="135" y1="210" x2="135" y2="250"/><line x1="115" y1="230" x2="155" y2="230"/><rect x="245" y="210" width="40" height="40" rx="5"/><line x1="265" y1="210" x2="265" y2="250"/><line x1="245" y1="230" x2="285" y2="230"/><!-- chimney --><rect x="250" y="100" width="30" height="65" rx="2"/><!-- smoke --><path d="M265 100 Q270 85 260 70 Q250 55 260 40"/><path d="M275 95 Q280 80 270 65"/><!-- path --><path d="M200 340 Q200 365 185 380 Q175 390 160 395M200 340 Q200 365 215 380 Q225 390 240 395"/><!-- flowers --><circle cx="90" cy="335" r="5"/><circle cx="80" cy="330" r="5"/><circle cx="85" cy="325" r="5"/><circle cx="95" cy="328" r="5"/><circle cx="88" cy="331" r="3" fill="#222"/><line x1="88" y1="338" x2="88" y2="355"/><circle cx="320" cy="330" r="5"/><circle cx="310" cy="325" r="5"/><circle cx="315" cy="320" r="5"/><circle cx="325" cy="323" r="5"/><circle cx="318" cy="326" r="3" fill="#222"/><line x1="318" y1="333" x2="318" y2="350"/><!-- sun --><circle cx="55" cy="55" r="20"/><line x1="55" y1="25" x2="55" y2="15"/><line x1="55" y1="85" x2="55" y2="95"/><line x1="25" y1="55" x2="15" y2="55"/><line x1="85" y1="55" x2="95" y2="55"/><line x1="34" y1="34" x2="27" y2="27"/><line x1="76" y1="76" x2="83" y2="83"/><line x1="34" y1="76" x2="27" y2="83"/><line x1="76" y1="34" x2="83" y2="27"/></g></svg>`
+  },
+  {
+    id: 'star-mandala-001',
+    name_he: 'מנדלה כוכבים',
+    name_en: 'Star Mandala',
+    category: 'mandalas',
+    difficulty: 'medium',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><!-- outer circle --><circle cx="200" cy="200" r="165"/><circle cx="200" cy="200" r="145"/><circle cx="200" cy="200" r="115"/><circle cx="200" cy="200" r="80"/><circle cx="200" cy="200" r="45"/><circle cx="200" cy="200" r="20"/><!-- 6-point star outer --><path d="M200 45 L235 130 L325 130 L250 180 L275 270 L200 220 L125 270 L150 180 L75 130 L165 130 Z" stroke-width="2.5"/><!-- 6-point star inner --><path d="M200 100 L220 155 L280 155 L232 188 L248 245 L200 212 L152 245 L168 188 L120 155 L180 155 Z"/><!-- small circles at star points --><circle cx="200" cy="45" r="6"/><circle cx="325" cy="130" r="6"/><circle cx="275" cy="270" r="6"/><circle cx="200" cy="220" r="6" transform="rotate(180,200,200)"/><circle cx="325" cy="130" r="6" transform="rotate(180,200,200)"/><circle cx="275" cy="270" r="6" transform="rotate(180,200,200)"/><!-- decorative dots between rings --><circle cx="200" cy="48" r="3" transform="rotate(0,200,200)" fill="#222"/><circle cx="200" cy="48" r="3" transform="rotate(60,200,200)" fill="#222"/><circle cx="200" cy="48" r="3" transform="rotate(120,200,200)" fill="#222"/><circle cx="200" cy="48" r="3" transform="rotate(180,200,200)" fill="#222"/><circle cx="200" cy="48" r="3" transform="rotate(240,200,200)" fill="#222"/><circle cx="200" cy="48" r="3" transform="rotate(300,200,200)" fill="#222"/><!-- arcs between circles --><path d="M160 92 Q200 72 240 92" /><path d="M160 92 Q200 72 240 92" transform="rotate(60,200,200)"/><path d="M160 92 Q200 72 240 92" transform="rotate(120,200,200)"/><path d="M160 92 Q200 72 240 92" transform="rotate(180,200,200)"/><path d="M160 92 Q200 72 240 92" transform="rotate(240,200,200)"/><path d="M160 92 Q200 72 240 92" transform="rotate(300,200,200)"/></g></svg>`
+  },
+  {
+    id: 'dragon-001',
+    name_he: 'דרקון חמוד',
+    name_en: 'Cute Dragon',
+    category: 'fantasy',
+    difficulty: 'medium',
+    ageGroup: 'kids',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- head --><ellipse cx="160" cy="130" rx="55" ry="45"/><!-- horns --><path d="M130 92 L115 55 L140 85"/><path d="M175 88 L185 50 L195 85"/><!-- eye --><circle cx="145" cy="122" r="12"/><circle cx="148" cy="120" r="6" fill="#222"/><!-- nostril --><circle cx="118" cy="140" r="4"/><circle cx="128" cy="145" r="4"/><!-- mouth --><path d="M115 155 Q140 170 165 155"/><!-- tiny flame --><path d="M108 150 Q95 145 90 155 Q85 165 95 160 Q88 170 100 162"/><!-- ear/frill --><path d="M195 100 Q215 85 210 110 Q225 95 218 120 Q235 110 225 135"/><!-- neck --><path d="M185 165 Q210 190 220 220"/><path d="M140 170 Q160 200 170 230"/><!-- body --><ellipse cx="220" cy="270" rx="75" ry="55"/><!-- belly lines --><path d="M180 255 Q220 240 260 255"/><path d="M175 270 Q220 258 265 270"/><path d="M180 285 Q220 275 260 285"/><!-- wing --><path d="M195 230 Q160 180 190 170 Q210 165 230 190 Q240 170 255 195 Q265 180 268 210 L260 240"/><!-- legs --><path d="M175 310 L165 355 L182 355 L185 315"/><path d="M260 310 L265 355 L282 355 L275 315"/><!-- feet/claws --><path d="M162 355 L158 348M170 355 L170 348M178 355 L180 348"/><path d="M262 355 L258 348M270 355 L270 348M278 355 L280 348"/><!-- tail --><path d="M290 280 Q330 290 345 270 Q360 250 350 240"/><path d="M350 240 L340 230 L355 235 L345 225"/><!-- small spikes on back --><path d="M200 218 L205 205 L212 218"/><path d="M225 212 L232 198 L238 214"/><path d="M248 220 L258 208 L262 224"/></g></svg>`
+  },
+  {
+    id: 'rainbow-001',
+    name_he: 'קשת בענן',
+    name_en: 'Rainbow',
+    category: 'nature',
+    difficulty: 'easy',
+    ageGroup: 'toddler',
+    svg: `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><!-- rainbow arcs --><path d="M40 280 A160 160 0 0 1 360 280" stroke-width="3"/><path d="M60 280 A140 140 0 0 1 340 280" stroke-width="3"/><path d="M80 280 A120 120 0 0 1 320 280" stroke-width="3"/><path d="M100 280 A100 100 0 0 1 300 280" stroke-width="3"/><path d="M120 280 A80 80 0 0 1 280 280" stroke-width="3"/><path d="M140 280 A60 60 0 0 1 260 280" stroke-width="3"/><path d="M160 280 A40 40 0 0 1 240 280" stroke-width="3"/><!-- left cloud --><circle cx="55" cy="285" r="25"/><circle cx="30" cy="290" r="20"/><circle cx="75" cy="290" r="22"/><circle cx="50" cy="300" r="18"/><!-- right cloud --><circle cx="345" cy="285" r="25"/><circle cx="325" cy="290" r="20"/><circle cx="365" cy="290" r="22"/><circle cx="345" cy="300" r="18"/><!-- sun --><circle cx="200" cy="90" r="30"/><line x1="200" y1="50" x2="200" y2="38"/><line x1="200" y1="130" x2="200" y2="142"/><line x1="160" y1="90" x2="148" y2="90"/><line x1="240" y1="90" x2="252" y2="90"/><line x1="172" y1="62" x2="163" y2="53"/><line x1="228" y1="118" x2="237" y2="127"/><line x1="172" y1="118" x2="163" y2="127"/><line x1="228" y1="62" x2="237" y2="53"/><!-- happy sun face --><circle cx="190" cy="85" r="3" fill="#222"/><circle cx="210" cy="85" r="3" fill="#222"/><path d="M190 100 Q200 110 210 100"/><!-- birds --><path d="M100 140 Q110 130 120 140"/><path d="M290 120 Q300 110 310 120"/><path d="M140 100 Q148 92 156 100"/><!-- small stars --><path d="M330 60 L333 50 L336 60 L333 70Z" fill="#222" stroke="none"/><path d="M70 70 L73 62 L76 70 L73 78Z" fill="#222" stroke="none"/></g></svg>`
+  }
+];
+
+// ===== LABELS =====
+const CATEGORY_LABELS = {
+  all: 'הכל',
+  animals: 'חיות 🐾',
+  nature: 'טבע 🌿',
+  characters: 'דמויות 👑',
+  vehicles: 'כלי רכב 🚗',
+  fantasy: 'פנטזיה 🦄',
+  mandalas: 'מנדלות ✨'
+};
+
+const DIFFICULTY_LABELS = { easy: 'קל', medium: 'בינוני', hard: 'מורכב' };
+
+const COLORS = [
+  '#FF0000', '#FF6B00', '#FFD700', '#00CC00', '#008000',
+  '#00CCCC', '#0066FF', '#800080', '#FF69B4', '#8B4513',
+  '#000000', '#FFFFFF', '#808080', '#FFE4C4', '#F0E68C', '#DDA0DD'
+];
+
+// ===== STATE =====
+let currentScreen = 'home';
+let selectedCategory = 'all';
+let currentPage = null;
+let isDrawing = false;
+let lastX = 0, lastY = 0;
+let currentColor = '#FF0000';
+let brushSize = 12;
+let currentTool = 'brush'; // brush | eraser | fill
+let history = [];
+let historyIndex = -1;
+let ctx = null;
+let canvas = null;
+let bgImageData = null;
+
+// ===== SCREENS =====
+function showScreen(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  if (screen === 'home') {
+    document.getElementById('homeScreen').classList.add('active');
+  } else if (screen === 'color') {
+    document.getElementById('colorScreen').classList.add('active');
+  } else if (screen === 'support') {
+    document.getElementById('supportScreen').classList.add('active');
+  }
+  currentScreen = screen;
+}
+
+// ===== GALLERY =====
+function renderCategories() {
+  const filter = document.getElementById('categoryFilter');
+  filter.innerHTML = '';
+  for (const [key, label] of Object.entries(CATEGORY_LABELS)) {
+    const btn = document.createElement('button');
+    btn.className = `cat-btn${key === selectedCategory ? ' active' : ''}`;
+    btn.textContent = label;
+    btn.onclick = () => {
+      selectedCategory = key;
+      renderCategories();
+      renderGallery();
+    };
+    filter.appendChild(btn);
+  }
+}
+
+function renderGallery() {
+  const grid = document.getElementById('galleryGrid');
+  const pages = selectedCategory === 'all'
+    ? COLORING_PAGES
+    : COLORING_PAGES.filter(p => p.category === selectedCategory);
+
+  if (pages.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="emoji">🎨</div><p>אין ציורים בקטגוריה הזו עדיין</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = pages.map((page, i) => `
+    <div class="gallery-card" onclick="openColoring('${page.id}')" style="animation-delay: ${i * 0.05}s">
+      <div class="card-image">${page.svg}</div>
+      <div class="card-info">
+        <div class="card-name">${page.name_he}</div>
+        <div class="card-category">${CATEGORY_LABELS[page.category] || page.category}</div>
+        <span class="card-difficulty ${page.difficulty}">${DIFFICULTY_LABELS[page.difficulty]}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== COLORING =====
+function openColoring(pageId) {
+  currentPage = COLORING_PAGES.find(p => p.id === pageId);
+  if (!currentPage) return;
+
+  document.getElementById('coloringTitle').textContent = currentPage.name_he;
+  showScreen('color');
+
+  // Reset state
+  history = [];
+  historyIndex = -1;
+  currentTool = 'brush';
+  currentColor = '#FF0000';
+  brushSize = 12;
+  updateToolButtons();
+  updateUndoRedo();
+
+  // Setup canvas after screen is visible
+  requestAnimationFrame(() => {
+    setupCanvas();
+    renderColorPalette();
+  });
+}
+
+function setupCanvas() {
+  const container = document.getElementById('canvasContainer');
+  canvas = document.getElementById('coloringCanvas');
+  ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+  const containerW = container.clientWidth;
+  const containerH = container.clientHeight;
+
+  // Set canvas size to fit container
+  const size = Math.min(containerW, containerH);
+  canvas.width = size;
+  canvas.height = size;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+
+  // Draw white background
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw SVG onto canvas
+  const svgBlob = new Blob([currentPage.svg], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  img.onload = () => {
+    // Center the image
+    const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.9;
+    const x = (canvas.width - img.width * scale) / 2;
+    const y = (canvas.height - img.height * scale) / 2;
+    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+    URL.revokeObjectURL(url);
+
+    // Save the background (outline) for reference
+    bgImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    saveState();
+  };
+  img.src = url;
+
+  // Event listeners
+  canvas.onmousedown = startDraw;
+  canvas.onmousemove = drawing;
+  canvas.onmouseup = stopDraw;
+  canvas.onmouseleave = stopDraw;
+
+  canvas.ontouchstart = handleTouchStart;
+  canvas.ontouchmove = handleTouchMove;
+  canvas.ontouchend = stopDraw;
+  canvas.ontouchcancel = stopDraw;
+}
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const touch = e.touches?.[0];
+  const clientX = touch ? touch.clientX : e.clientX;
+  const clientY = touch ? touch.clientY : e.clientY;
+  return [(clientX - rect.left) * scaleX, (clientY - rect.top) * scaleY];
+}
+
+function startDraw(e) {
+  if (currentTool === 'fill') {
+    const [x, y] = getPos(e);
+    floodFill(Math.round(x), Math.round(y), currentColor);
+    saveState();
+    return;
+  }
+  isDrawing = true;
+  [lastX, lastY] = getPos(e);
+}
+
+function drawing(e) {
+  if (!isDrawing) return;
+  e.preventDefault();
+  const [x, y] = getPos(e);
+
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(x, y);
+  ctx.strokeStyle = currentTool === 'eraser' ? '#FFFFFF' : currentColor;
+  ctx.lineWidth = brushSize;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  if (currentTool === 'eraser') {
+    ctx.globalCompositeOperation = 'source-over';
+  } else {
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  ctx.stroke();
+
+  [lastX, lastY] = [x, y];
+}
+
+function stopDraw() {
+  if (isDrawing) {
+    isDrawing = false;
+    // Redraw the outline on top
+    if (bgImageData) {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.putImageData(bgImageData, 0, 0);
+
+      // Only draw the dark pixels (outlines) from bg
+      ctx.globalCompositeOperation = 'source-over';
+      const bgData = bgImageData.data;
+      const currentData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = currentData.data;
+
+      for (let i = 0; i < bgData.length; i += 4) {
+        const brightness = (bgData[i] + bgData[i+1] + bgData[i+2]) / 3;
+        if (brightness < 80) {
+          pixels[i] = bgData[i];
+          pixels[i+1] = bgData[i+1];
+          pixels[i+2] = bgData[i+2];
+          pixels[i+3] = bgData[i+3];
+        }
+      }
+      ctx.putImageData(currentData, 0, 0);
+    }
+    saveState();
+  }
+}
+
+function handleTouchStart(e) {
+  e.preventDefault();
+  startDraw(e);
+}
+
+function handleTouchMove(e) {
+  e.preventDefault();
+  drawing(e);
+}
+
+// ===== FLOOD FILL =====
+function floodFill(startX, startY, fillColor) {
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  const w = canvas.width;
+  const h = canvas.height;
+
+  const idx = (startY * w + startX) * 4;
+  const startR = data[idx], startG = data[idx+1], startB = data[idx+2], startA = data[idx+3];
+
+  // Parse fill color
+  const tempEl = document.createElement('div');
+  tempEl.style.color = fillColor;
+  document.body.appendChild(tempEl);
+  const computed = getComputedStyle(tempEl).color;
+  document.body.removeChild(tempEl);
+  const [fr, fg, fb] = computed.match(/\d+/g).map(Number);
+
+  // Don't fill if same color
+  if (Math.abs(startR - fr) < 10 && Math.abs(startG - fg) < 10 && Math.abs(startB - fb) < 10) return;
+
+  // Don't fill dark outlines
+  const brightness = (startR + startG + startB) / 3;
+  if (brightness < 60) return;
+
+  const tolerance = 40;
+  const stack = [[startX, startY]];
+  const visited = new Uint8Array(w * h);
+
+  function matches(i) {
+    return Math.abs(data[i] - startR) <= tolerance &&
+           Math.abs(data[i+1] - startG) <= tolerance &&
+           Math.abs(data[i+2] - startB) <= tolerance &&
+           Math.abs(data[i+3] - startA) <= tolerance;
+  }
+
+  while (stack.length > 0) {
+    const [x, y] = stack.pop();
+    if (x < 0 || x >= w || y < 0 || y >= h) continue;
+    const pi = y * w + x;
+    if (visited[pi]) continue;
+    const i = pi * 4;
+    if (!matches(i)) continue;
+
+    visited[pi] = 1;
+    data[i] = fr;
+    data[i+1] = fg;
+    data[i+2] = fb;
+    data[i+3] = 255;
+
+    stack.push([x+1, y], [x-1, y], [x, y+1], [x, y-1]);
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+
+  // Redraw outlines
+  if (bgImageData) {
+    const finalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const finalPx = finalData.data;
+    const bgPx = bgImageData.data;
+    for (let i = 0; i < bgPx.length; i += 4) {
+      const b = (bgPx[i] + bgPx[i+1] + bgPx[i+2]) / 3;
+      if (b < 80) {
+        finalPx[i] = bgPx[i];
+        finalPx[i+1] = bgPx[i+1];
+        finalPx[i+2] = bgPx[i+2];
+        finalPx[i+3] = bgPx[i+3];
+      }
+    }
+    ctx.putImageData(finalData, 0, 0);
+  }
+}
+
+// ===== TOOLS =====
+function setTool(tool) {
+  currentTool = tool;
+  updateToolButtons();
+  canvas.style.cursor = tool === 'fill' ? 'cell' : tool === 'eraser' ? 'grab' : 'crosshair';
+}
+
+function updateToolButtons() {
+  document.getElementById('brushBtn').classList.toggle('active', currentTool === 'brush');
+  document.getElementById('eraserBtn').classList.toggle('active', currentTool === 'eraser');
+  document.getElementById('fillBtn').classList.toggle('active', currentTool === 'fill');
+}
+
+function setBrushSize(val) {
+  brushSize = parseInt(val);
+  document.getElementById('brushSizeLabel').textContent = val;
+}
+
+// ===== UNDO / REDO =====
+function saveState() {
+  historyIndex++;
+  history.length = historyIndex;
+  history.push(canvas.toDataURL());
+  // Keep max 30 states
+  if (history.length > 30) {
+    history.shift();
+    historyIndex--;
+  }
+  updateUndoRedo();
+}
+
+function undo() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    restoreState();
+  }
+}
+
+function redo() {
+  if (historyIndex < history.length - 1) {
+    historyIndex++;
+    restoreState();
+  }
+}
+
+function restoreState() {
+  const img = new Image();
+  img.src = history[historyIndex];
+  img.onload = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    updateUndoRedo();
+  };
+}
+
+function updateUndoRedo() {
+  document.getElementById('undoBtn').disabled = historyIndex <= 0;
+  document.getElementById('redoBtn').disabled = historyIndex >= history.length - 1;
+}
+
+function clearCanvas() {
+  if (!canvas || !ctx) return;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Redraw the outline
+  if (bgImageData) {
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.putImageData(bgImageData, 0, 0);
+
+    const currentData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = currentData.data;
+    const bgPx = bgImageData.data;
+    for (let i = 0; i < bgPx.length; i += 4) {
+      const b = (bgPx[i] + bgPx[i+1] + bgPx[i+2]) / 3;
+      if (b < 80) {
+        pixels[i] = bgPx[i];
+        pixels[i+1] = bgPx[i+1];
+        pixels[i+2] = bgPx[i+2];
+        pixels[i+3] = bgPx[i+3];
+      }
+    }
+    ctx.putImageData(currentData, 0, 0);
+  }
+  saveState();
+  showToast('הציור נוקה! 🧹');
+}
+
+// ===== SAVE =====
+function saveImage() {
+  if (!canvas) return;
+  const link = document.createElement('a');
+  link.download = `tzvoni-${currentPage.id}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('הציור נשמר! 💾');
+}
+
+// ===== COLOR PALETTE =====
+function renderColorPalette() {
+  const palette = document.getElementById('colorPalette');
+  palette.innerHTML = COLORS.map(c => {
+    const isWhite = c === '#FFFFFF';
+    const isActive = c === currentColor;
+    return `<div class="color-swatch${isActive ? ' active' : ''}${isWhite ? ' white-swatch' : ''}"
+      style="background:${c}" onclick="selectColor('${c}', this)"></div>`;
+  }).join('') + `
+    <div class="color-picker-wrap">
+      <div class="color-picker-btn"></div>
+      <input type="color" id="customColorPicker" value="${currentColor}"
+        oninput="selectColor(this.value, null)" onchange="selectColor(this.value, null)">
+    </div>`;
+}
+
+function selectColor(color, el) {
+  currentColor = color;
+  if (currentTool === 'eraser') setTool('brush');
+
+  // Update active state
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else {
+    // Custom color - remove active from all swatches
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  }
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ===== INIT =====
+renderCategories();
+renderGallery();
+
+// Prevent pull-to-refresh on mobile
+document.addEventListener('touchmove', e => {
+  if (currentScreen === 'color') {
+    // Only prevent default on canvas
+    if (e.target === canvas || e.target.closest('.canvas-container')) {
+      e.preventDefault();
+    }
+  }
+}, { passive: false });
+
+// Handle resize
+window.addEventListener('resize', () => {
+  if (currentScreen === 'color' && currentPage) {
+    // Don't reset - just keep current state
+  }
+});
+
+</script>
+</body>
+</html>
